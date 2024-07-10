@@ -2,7 +2,7 @@ from pathlib import Path
 from django.conf import settings
 from PIL import Image
 
-def resize_image(image_django, new_width=400, optimize=True, quality=80):
+def resize_image(image_django, new_width=500, optimize=True, quality=80):
     image_path = Path(settings.MEDIA_ROOT / image_django.name).resolve()
     image_pillow = Image.open(image_path)
     original_width, original_height = image_pillow.size

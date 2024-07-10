@@ -1,4 +1,3 @@
-from typing import Iterable
 from django.db import models
 from utils.images import resize_image
 from utils.rands import new_slugfy
@@ -16,7 +15,11 @@ class Product(models.Model):
         blank=True, 
         default=""
     )
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(
+        unique=True,
+        blank=True,
+        default="",
+        null=True)
     preco_marketing = models.FloatField()
     preco_marketing_promocional = models.FloatField(default=0)
     tipo = models.CharField(
@@ -43,6 +46,25 @@ class Product(models.Model):
             resize_image(self.imagem)
 
         return super_save
+
+    def __str__(self) -> str:
+        return self.nome
+    
+
+class Variation(models.Model):
+    class Meta:
+        verbose_name = "Variação"
+        verbose_name_plural = "Variações"
+
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    nome = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True
+    )
+    preco = models.FloatField()
+    preco_promocional = models.FloatField(default=0)
+    estoque = models.PositiveIntegerField(default=0)
 
     def __str__(self) -> str:
         return self.nome
