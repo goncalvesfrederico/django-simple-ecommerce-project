@@ -1,6 +1,7 @@
 from typing import Iterable
 from django.db import models
 from utils.images import resize_image
+from utils.rands import new_slugfy
 
 class Product(models.Model):
     class Meta:
@@ -28,7 +29,8 @@ class Product(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        # TODO: create a slugfy function to create a new slug with not exists the value
+        if not self.slug:
+            self.slug = new_slugfy(self.nome, 3)
 
         currente_image_name = str(self.imagem.name)
         super_save = super().save(*args, **kwargs)
