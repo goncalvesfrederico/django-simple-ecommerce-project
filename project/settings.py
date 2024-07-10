@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'product',
     'cart',
-    'account',
+    'user_profile',
     
     # TODO: remove debug toobar when i finished the project.
     'debug_toolbar',
