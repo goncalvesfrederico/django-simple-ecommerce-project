@@ -21,6 +21,9 @@ from django.conf.urls.static import static
 from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
+    path('', include('product.urls')),
+    path('profile/', include('user_profile.urls')),
+    path('cart/', include('cart.urls')),
     path('admin/', admin.site.urls),
 ] + debug_toolbar_urls()
 # TODO: remove debug toobar when i finished the project.
