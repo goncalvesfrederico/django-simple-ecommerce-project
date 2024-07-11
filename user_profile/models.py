@@ -1,5 +1,8 @@
+import re
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ValidationError
+from utils.validate_cpf import check
 
 class Profile(models.Model):
     class Meta:
@@ -54,9 +57,17 @@ class Profile(models.Model):
         )
     )
 
+    def clean(self) -> None:
+        error_messages = {}
+
+        if not check(self.cpf):
+            error_messages["cpf"] = "Digite um CPF válido"
+
+        if re.search(r"[^0-9]", self.zip_code) or len(self.zip_code) < 8:
+            error_messages["zip_code"] = "CEP inválido, digite os 8 digitos do CEP."
+
+        if error_messages:
+            raise ValidationError(error_messages)
+
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name}"
-    
-    def clean(self) -> None:
-        # TODO: make the clean method
-        ...
