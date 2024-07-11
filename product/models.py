@@ -7,10 +7,11 @@ class Product(models.Model):
         verbose_name = "Produto"
         verbose_name_plural = "Produtos"
 
-    nome = models.CharField(max_length=120)
-    descricao_curta = models.TextField(max_length=120)
-    descricao_longa = models.TextField()
-    imagem = models.ImageField(
+    name = models.CharField(verbose_name="nome", max_length=120, default="")
+    short_description = models.TextField(verbose_name="Descrição Curta", max_length=255, default="")
+    long_description = models.TextField(verbose_name="Descrição Longa", default="")
+    image = models.ImageField(
+        verbose_name="Imagem",
         upload_to="product_image/%Y/%m/", 
         blank=True, 
         default=""
@@ -20,35 +21,46 @@ class Product(models.Model):
         blank=True,
         default="",
         null=True)
-    preco_marketing = models.FloatField()
-    preco_marketing_promocional = models.FloatField(default=0)
-    tipo = models.CharField(
+    price_marketing = models.FloatField(verbose_name="Preço Marketing", default=0)
+    promotion_price_marketing = models.FloatField(verbose_name="Preço Marketing Promocional", default=0)
+    type = models.CharField(
+        verbose_name="Tipo",
         default="V", 
         max_length=1, 
         choices=(
-            ("V", "Variação"), 
+            ("V", "Variável"), 
             ("S", "Simples"),
         )
     )
 
+    def formatted_price(self):
+        return f"R$ {self.price_marketing:.2f}".replace(".", ",")
+    
+    formatted_price.short_description = "Preço"
+
+    def formatted_promotion_price(self):
+        return f"R$ {self.promotion_price_marketing:.2f}".replace(".", ",")
+    
+    formatted_promotion_price.short_description = "Preço Promo."
+
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = new_slugfy(self.nome, 3)
+            self.slug = new_slugfy(self.name, 3)
 
-        currente_image_name = str(self.imagem.name)
+        currente_image_name = str(self.image.name)
         super_save = super().save(*args, **kwargs)
         imagem_saved = False
 
-        if self.imagem:
-            imagem_saved = currente_image_name != self.imagem.name
+        if self.image:
+            imagem_saved = currente_image_name != self.image.name
 
         if imagem_saved:
-            resize_image(self.imagem)
+            resize_image(self.image)
 
         return super_save
 
     def __str__(self) -> str:
-        return self.nome
+        return self.name
     
 
 class Variation(models.Model):
@@ -57,14 +69,15 @@ class Variation(models.Model):
         verbose_name_plural = "Variações"
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    nome = models.CharField(
+    name = models.CharField(
+        verbose_name="Nome",
         max_length=50,
         blank=True,
         null=True
     )
-    preco = models.FloatField()
-    preco_promocional = models.FloatField(default=0)
-    estoque = models.PositiveIntegerField(default=0)
+    price = models.FloatField(verbose_name="Preço")
+    promotion_price = models.FloatField(verbose_name="Preço Promocional", default=0)
+    stock = models.PositiveIntegerField(verbose_name="Estoque", default=0)
 
     def __str__(self) -> str:
-        return self.nome
+        return self.name
