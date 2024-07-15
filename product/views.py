@@ -10,7 +10,7 @@ class ProductListView(ListView):
     context_object_name = "products"
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(View):
     ...
 
 
