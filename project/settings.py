@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     
     # TODO: remove debug toobar when i finished the project.
     'debug_toolbar',
+    'bootstrap5',
 ]
 
 MIDDLEWARE = [

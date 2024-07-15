@@ -3,13 +3,12 @@
 <head>
     {% include "global/partials/_head.html" %}
 </head>
-<body>
-    <div class="product-wrapper">
-        {% include "global/partials/_header.html" %}
-        {% include "global/partials/_messages.html" %}
+<body data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" tabindex="0">
+    {% include "global/partials/_header.html" %}
+    {% include "global/partials/_messages.html" %}
         
-        {% block content %}{% endblock content %}
-        {% include "global/partials/_footer.html" %}
+    {% block content %}{% endblock content %}
+    {% include "global/partials/_footer.html" %}
     </div>
 </body>
 </html>
