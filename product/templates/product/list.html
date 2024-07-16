@@ -1,5 +1,6 @@
 {% extends "global/base.html" %}
 {% load static %}
+{% load custom_tags %}
 
 {% block content %}
     <!-- SECTION PRODUCTS -->
@@ -19,23 +20,29 @@
                             <div class="swiper-slide">
                                 <div class="product-card position-relative">
                                     <div class="image-holder">
-                                        <img src="{% static "global/images/product-item1.jpg" %}" alt="product-item" class="img-fluid">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+                                    {% endif %}
                                     </div>
                                     <div class="cart-concern position-absolute">
                                         <div class="cart-button d-flex">
-                                            <a href="#" class="btn btn-medium btn-black">
+                                            <a href="{{ product.slug }}" class="btn btn-medium btn-black">
                                                 Add to cart
-                                                <svg class="cart-ouline">
-                                                    <use href=#cart-ouline></use>
+                                                <svg class="cart-outline">
+                                                    <use href=#cart-outline></use>
                                                 </svg>
                                             </a>
                                         </div>
                                     </div>
                                     <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                         <h3 class="card-title text-uppercase">
-                                            <a href="#" class="no-underline clr-dark">{{ product.name }}</a>
+                                            <a href="{{ product.slug }}" class="no-underline clr-dark">{{ product.name }}</a>
                                         </h3>
-                                        <span class="item-price text-primary">R$ {{ product.promotion_price_marketing }}</span>
+                                        {% if product.promotion_price_marketing %}
+                                            <span class="item-price text-primary">{{ product.promotion_price_marketing|priceformatted }}</span>
+                                        {% else %}
+                                            <span class="item-price text-primary">R$ {{ product.price_marketing|priceformatted }}</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

@@ -3,7 +3,7 @@ from product.models import Product, Variation
 
 @admin.register(Variation)
 class VariationAdmin(admin.ModelAdmin):
-    list_display = "id", "name", "price"
+    list_display = "id", "name", "formatted_price", "formatted_promotion_price"
     list_display_links = "name",
     search_fields = "name",
     list_per_page = 10

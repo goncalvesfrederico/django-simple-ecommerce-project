@@ -1,6 +1,7 @@
 from django.db import models
 from utils.images import resize_image
 from utils.rands import new_slugfy
+from utils.format_price import formatprice
 
 class Product(models.Model):
     class Meta:
@@ -34,12 +35,12 @@ class Product(models.Model):
     )
 
     def formatted_price(self):
-        return f"R$ {self.price_marketing:.2f}".replace(".", ",")
+        return formatprice(self.price_marketing)
     
     formatted_price.short_description = "Preço"
 
     def formatted_promotion_price(self):
-        return f"R$ {self.promotion_price_marketing:.2f}".replace(".", ",")
+        return formatprice(self.promotion_price_marketing)
     
     formatted_promotion_price.short_description = "Preço Promo."
 
@@ -78,6 +79,16 @@ class Variation(models.Model):
     price = models.FloatField(verbose_name="Preço")
     promotion_price = models.FloatField(verbose_name="Preço Promocional", default=0)
     stock = models.PositiveIntegerField(verbose_name="Estoque", default=0)
+
+    def formatted_price(self):
+        return formatprice(self.price)
+    
+    formatted_price.short_description = "Preço"
+
+    def formatted_promotion_price(self):
+        return formatprice(self.promotion_price)
+    
+    formatted_promotion_price.short_description = "Preço Promo."
 
     def __str__(self) -> str:
         return self.name
