@@ -115,3 +115,28 @@
     }); // End of a document ready
 
 })(jQuery);
+
+(function () {
+  select_variation = document.getElementById('select-variations');
+  variation_price = document.getElementById('variation-price');
+  variation_promotion_price = document.getElementById('variation-promotion-price');
+
+  if (!select_variation) {
+      return;
+  }
+
+  if (!variation_price) {
+      return;
+  }
+
+  select_variation.addEventListener('change', function () {
+      price = this.options[this.selectedIndex].getAttribute('data-price');
+      promotion_price = this.options[this.selectedIndex].getAttribute('data-promotion-price');
+
+      variation_price.innerHTML = price;
+
+      if (variation_promotion_price) {
+          variation_promotion_price.innerHTML = promotion_price;
+      }
+  })
+})();

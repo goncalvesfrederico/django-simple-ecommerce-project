@@ -1,0 +1,70 @@
+{% extends "global/base.html" %}
+{% load custom_tags %}
+
+{% block content %}
+
+    <section class="ftco-section ftco-no-pb ftco-no-pt">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 p-md-5 img img-2 d-flex justify-content-center align-items-center">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid">
+                </div>
+                <div class="col-md-7 py-5 wrap-about pb-md-5 ftco-animate fadeInUp ftco-animated">
+                    <div class="heading-section-bold mb-4 mt-md-5">
+                        <div class="ml-md-0">
+                            <h2 class="display-7 text-dark text-uppercase">
+                                {{ product.name }}
+                            </h2>
+                        </div>
+                        <div class="pb-md-5">
+                            <p>{{ product.short_description }}</p>                            
+                            
+                            {% if product.promotion_price_marketing %}
+                                <span id="variation-promotion-price" class="lead product-price">
+                                    {{ product.promotion_price_marketing|priceformatted }}
+                                </span>
+                                <span id="variation-price" class="lead product-old-price text-muted">
+                                    {{ product.price_marketing|priceformatted }}
+                                </span>
+                            {% else %}
+                                <span id="variation-price" class="lead product-price">
+                                    {{ product.price_marketing|priceformatted }}
+                                </span>
+                            {% endif %}
+                            <p></p>
+
+                            <form action="{% url "product:addtocart" %}" id="form-add-to-cart">
+                                <div class="form-group">
+                                    {% if product.type == "V" %}
+                                        <select name="vid" id="select-variations" class="form-control form-control-lg">
+                                            {% for variation in product.variation_set.all %}
+                                                {% if variation.name %}
+                                                    <option data-price="{{ variation.price|priceformatted }}" data-promotion-price="{{ variation.promotion_price|priceformatted }}" value="{{ variation.id }}">{{ variation.name }}</option>
+                                                {% else %}
+                                                    <option data-price="{{ variation.price|priceformatted }}" data-promotion-price="{{ variation.promotion_price|priceformatted }}" value="{{ variation.id }}">{{ variation }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    {% endif %}
+                                    <div class="mt-3 text-left swiper-wrapper">
+                                        <button type="submit" class="btn btn-primary btn-log btn-block">
+                                            Add to cart
+                                            <svg class="cart-outline">
+                                                <use href=#cart-outline></use>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <p>{{ product.long_description|linebreaks }}</p>
+        </div>                
+    </section>
+
+    <div class="mt-5"></div>
+{% endblock content %}

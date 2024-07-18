@@ -1,5 +1,4 @@
 {% extends "global/base.html" %}
-{% load static %}
 {% load custom_tags %}
 
 {% block content %}
@@ -26,8 +25,8 @@
                                     </div>
                                     <div class="cart-concern position-absolute">
                                         <div class="cart-button d-flex">
-                                            <a href="{{ product.slug }}" class="btn btn-medium btn-black">
-                                                Add to cart
+                                            <a href="{% url "product:productdetail" product.slug %}" class="btn btn-medium btn-black">
+                                                Buying options
                                                 <svg class="cart-outline">
                                                     <use href=#cart-outline></use>
                                                 </svg>
@@ -36,7 +35,7 @@
                                     </div>
                                     <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
                                         <h3 class="card-title text-uppercase">
-                                            <a href="{{ product.slug }}" class="no-underline clr-dark">{{ product.name }}</a>
+                                            <a href="{% url "product:productdetail" product.slug %}" class="no-underline clr-dark">{{ product.name }}</a>
                                         </h3>
                                         {% if product.promotion_price_marketing %}
                                             <span class="item-price text-primary">{{ product.promotion_price_marketing|priceformatted }}</span>

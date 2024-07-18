@@ -8,11 +8,12 @@ class ProductListView(ListView):
     model = Product
     template_name = "product/list.html"
     context_object_name = "products"
-    paginate_by = 10
 
 
-class ProductDetailView(View):
-    ...
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "product/product.html"
+    context_object_name = 'product'
 
 
 class AddToCart(View):
