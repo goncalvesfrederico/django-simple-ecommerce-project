@@ -121,5 +121,5 @@ class CartListView(View):
         )
 
 
-class Finish(View):
+class CheckoutView(View):
     ...

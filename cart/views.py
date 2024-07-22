@@ -5,7 +5,7 @@ class Buy(View):
     ...
 
 
-class Checkout(View):
+class SaveOrder(View):
     ...
 
 
