@@ -129,7 +129,7 @@
         <div class="offcanvas-body">
           <ul id="navbar" class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
             <li class="nav-item">
-              <a href="#billboard" class="nav-link me-4 active">Home</a>
+              <a href="/" class="nav-link me-4 active">Home</a>
             </li>
             <li class="nav-item">
               <a href="#company-services" class="nav-link me-4">Services</a>
@@ -142,9 +142,6 @@
             </li>
             <li class="nav-item">
               <a class="nav-link me-4" href="#yearly-sale">Sale</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link me-4" href="#latest-blog">Blog</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Pages</a>
@@ -201,7 +198,7 @@
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="{% url "product:cart" %}">
                       <svg class="cart">
                         <use href="#cart"></use>
                       </svg>

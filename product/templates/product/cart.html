@@ -1,5 +1,84 @@
 {% extends "global/base.html" %}
+{% load static %}
+{% load custom_tags %}
 
 {% block content %}
-    {{ request.session.cart }}
+{% if cart %}
+    <main class="container mt-4 mb-4">
+        <div class="row mt-3">
+            <div class="col">
+                <h3>Shopping Cart</h3>
+                <p class="lead">Products, quantitys and subtotal below.</p>
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th class="d-none d-lg-block">Image</th>
+                            <th>Product</th>
+                            <th>V.</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Subtotal Price</th>
+                        </tr>
+                        
+                        {% for row in cart.values %}
+                            <tr>
+                                <td class="d-none d-lg-block">
+                                    <img src="{% get_media_prefix %}{{ row.product_image }}" alt="{{ row.product_name}} {{row.variation_name }}" class="cart-img">
+                                </td>
+                                <td>
+                                    <a href="{% url "product:productdetail" row.product_slug %}" target="blank" class="clr-dark">
+                                        {{ row.product_name }} | 
+                                    </a>
+                                    <a href="{% url "product:deletefromcart"  %}?vid={{ row.variation_id}}" class="ml-3 no-underline">
+                                        <i class="fas fa-times-circle" aria-hidden="true">Delete</i>
+                                    </a>
+                                </td>
+                                <td>{{ row.variation_name }}</td>
+                                <td>{{ row.quantity }} </td>
+                                {% if row.unit_promotional_price < row.unit_price %}
+                                    <td>{{ row.unit_promotional_price|priceformatted }} </td>
+                                {% else %}
+                                    <td>{{ row.unit_price|priceformatted }} </td>
+                                {% endif %}
+                                {% if row.full_promotional_price < row.total_price %}
+                                    <td>{{ row.full_promotional_price|priceformatted }}</td>
+                                {% else %}
+                                    <td>{{ row.total_price|priceformatted }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-3">
+            <div class="col-lg">
+                <p class="lead">Total</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <td class="font-weigh-bold">Subtotal ({{ cart|total_number_items_cart }})</td>
+                            <td>{{ cart|sum_total_value_cart|priceformatted }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg mt-auto">
+                <a href="#" class="btn btn-lg btn-block btn-primary">Proceed to checkout</a>
+            </div>
+        </div>
+    </main>
+{% else %}
+    <main class="container mt-4 mb-4">
+        <div class="row mt-3">
+            <div class="col">
+                <h3>Shopping Cart</h3>
+                <p class="lead">Your cart is empty!</p>
+            </div>
+        </div>
+    </main>
+{% endif %}
 {% endblock content %}
