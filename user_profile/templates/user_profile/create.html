@@ -1,0 +1,23 @@
+{% extends "global/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg">
+                <h1>Login</h1>
+            </div>
+            <div class="col-lg">
+                <h1>Register</h1>
+
+                <form action="" method="post" class="form">
+                    {% csrf_token %}
+                    {% bootstrap_form userform %}
+                    {% buttons %}
+                        <button class="btn btn-primary btn-block btn-lg">Register</button>
+                    {% endbuttons %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
