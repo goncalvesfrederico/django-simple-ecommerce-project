@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.http import HttpRequest, HttpResponse
 from user_profile.models import Profile
-from user_profile.forms import ProfileForm, UserForm
+from user_profile.forms import UserForm, ProfileForm
 
 class PerfilBase(View):
     def __init__(self, **kwargs: Any) -> None:
@@ -21,7 +21,6 @@ class PerfilBase(View):
                     "profileform": ProfileForm(data=request.POST or None),
                 }
             )
-            print(self._context)
         else:
             self._context.update(
                 {
