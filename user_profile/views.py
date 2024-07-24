@@ -1,8 +1,10 @@
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.shortcuts import redirect
+from django.views.generic import FormView, View
 from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from user_profile.forms import CreateUserForm, ProfileForm
 
 class CreateView(FormView):
@@ -57,3 +59,12 @@ class LoginView(FormView):
         auth.login(self.request, user=user)
         messages.success(self.request, "You are sucessfully logged in!")
         return super().form_valid(form)
+    
+
+class LogoutView(LoginRequiredMixin, View):
+    login_url = "user_profile:login"
+
+    def get(self, request):
+        print(self.request)
+        auth.logout(request)
+        return redirect("user_profile:login")

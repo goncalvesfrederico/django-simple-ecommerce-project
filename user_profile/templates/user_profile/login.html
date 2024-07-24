@@ -3,16 +3,31 @@
 
 {% block content %}
     <div class="container">
-        <div class="row">
-            <div class="col-lg">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
                 <h1>Login</h1>
-                {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
                     <p>You are logged as {{ user }} ({{ user.first_name }} {{ user.last_name}}).</p> 
                     Click <a href="#">here</a> to update your profile or go to your <a href="{% url "product:cart" %}">cart</a>.
-                {% else %}
-                    <p>DO SOMETHING</p>
-                {% endif %}
+                    <p>
+                        <a href="{% url "user_profile:logout" %}" class="btn btn-secondary btn-block btn-lg">Logout</a>
+                    </p>
+        {% else %}
+                    <form action="" method="post" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form login_form %}
+                        {% buttons %}
+                            <button class="btn btn-primary btn-block btn-lg">Login</button>
+                        {% endbuttons %}
+                    </form>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-5 text-center">
+                <p>Don't have an account?</p>
+                <a href="{% url "user_profile:create" %}" class="btn btn-secondary btn-block btn-lg">Create your account</a>
+            </div>
+        </div>
+        {% endif %}
     </div>
 {% endblock content %}
