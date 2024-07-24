@@ -1,51 +1,59 @@
-from typing import Any
-from django.shortcuts import render
-from django.views.generic import View
-from django.http import HttpRequest, HttpResponse
-from user_profile.models import Profile
-from user_profile.forms import UserForm, ProfileForm
+from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.views.generic import FormView
+from django.contrib import auth, messages
+from django.contrib.auth.forms import AuthenticationForm
+from user_profile.forms import CreateUserForm, ProfileForm
 
-class PerfilBase(View):
-    def __init__(self, **kwargs: Any) -> None:
-        super().__init__(**kwargs)
-        self._template_name = "user_profile/create.html"
-        self._context = {}
+class CreateView(FormView):
+    template_name = "user_profile/create.html"
+    form_class = CreateUserForm
+    success_url = reverse_lazy("user_profile:login")
 
-    def setup(self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
-        super().setup(request, *args, **kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "create_form": context.pop("form"),
+                "profile_form": ProfileForm(),
+            }
+        )
+        return context
 
-        if request.user.is_authenticated:
-            self._context.update(
-                {
-                    "userform": UserForm(data=request.POST or None, user=request.user, instance=request.user),
-                    "profileform": ProfileForm(data=request.POST or None),
-                }
-            )
+    def post(self, request, *args: str, **kwargs) -> HttpResponse:
+        create_form = CreateUserForm(self.request.POST)
+        profile_form = ProfileForm(self.request.POST)
+
+        if create_form.is_valid() and profile_form.is_valid():
+            user = create_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            messages.success(self.request, "Your account has been created.")
+            return self.form_valid(create_form, profile_form)
         else:
-            self._context.update(
-                {
-                    "userform": UserForm(data=request.POST or None),
-                    "profileform": ProfileForm(data=request.POST or None),
-                }
-            )
-        self.render = render(request, self._template_name, self._context)
+            return self.form_valid(create_form, profile_form)
 
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        return self.render
+    def form_valid(self, create_form, profile_form):
+        context = self.get_context_data()
+        context["create_form"] = create_form
+        context["profile_form"] = profile_form
+        print(context)
+        return self.render_to_response(context)
 
 
-class Create(PerfilBase):
-    def post(self, *args, **kwargs):
-        return self.render
+class LoginView(FormView):
+    template_name = "user_profile/login.html"
+    form_class = AuthenticationForm
+    success_url = reverse_lazy("product:productlist")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["login_form"] = context.pop("form")
+        return context
 
-class Update(View):
-    ...
-
-
-class Login(View):
-    ...
-
-
-class Logout(View):
-    ...
+    def form_valid(self, form):
+        user = form.get_user()
+        auth.login(self.request, user=user)
+        messages.success(self.request, "You are sucessfully logged in!")
+        return super().form_valid(form)

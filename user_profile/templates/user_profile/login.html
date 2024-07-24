@@ -1,0 +1,18 @@
+{% extends "global/base.html" %}
+{% load bootstrap5 %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg">
+                <h1>Login</h1>
+                {% if user.is_authenticated %}
+                    <p>You are logged as {{ user }} ({{ user.first_name }} {{ user.last_name}}).</p> 
+                    Click <a href="#">here</a> to update your profile or go to your <a href="{% url "product:cart" %}">cart</a>.
+                {% else %}
+                    <p>DO SOMETHING</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
