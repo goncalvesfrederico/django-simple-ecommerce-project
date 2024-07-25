@@ -1,3 +1,4 @@
+from typing import Any
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
@@ -5,7 +6,7 @@ from django.views.generic import FormView, View
 from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from user_profile.forms import CreateUserForm, ProfileForm
+from user_profile.forms import CreateUserForm, ProfileForm, UpdateUserForm
 
 class CreateView(FormView):
     template_name = "user_profile/create.html"
@@ -68,3 +69,47 @@ class LogoutView(LoginRequiredMixin, View):
         print(self.request)
         auth.logout(request)
         return redirect("user_profile:login")
+    
+
+class PerfilUpdateView(LoginRequiredMixin, FormView):
+    template_name = "user_profile/update_profile.html"
+    form_class = UpdateUserForm
+    success_url = reverse_lazy("user_profile:update")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "update_user_form": UpdateUserForm(instance=self.request.user),
+                "update_profile_form": ProfileForm(instance=self.request.user.profile),
+            }
+        )
+        return context
+    
+    def post(self, request, *args: str, **kwargs) -> HttpResponse:
+        update_user_form = UpdateUserForm(self.request.POST, instance=self.request.user)
+        update_profile_form = ProfileForm(self.request.POST, instance=self.request.user.profile)
+
+        if update_user_form.is_valid() and update_profile_form.is_valid():
+            user = update_user_form.save()
+            profile = update_profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            messages.success(self.request, "Your account has been updated.")
+            return self.form_valid(update_user_form, update_profile_form)
+        else:
+            messages.error(self.request, "Verify the form!")
+            return self.form_invalid(update_user_form, update_profile_form)
+    
+    def form_valid(self, update_user_form, update_profile_form):
+        context = self.get_context_data()
+        context["update_user_form"] = update_user_form
+        context["update_profile_form"] = update_profile_form
+        return self.render_to_response(context)
+
+    def form_invalid(self, update_user_form, update_profile_form):
+        context = self.get_context_data()
+        context["update_user_form"] = update_user_form
+        context["update_profile_form"] = update_profile_form
+        return self.render_to_response(context)
+    

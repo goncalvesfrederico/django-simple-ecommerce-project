@@ -8,10 +8,9 @@
                 <h1>Login</h1>
         {% if user.is_authenticated %}
                     <p>You are logged as {{ user }} ({{ user.first_name }} {{ user.last_name}}).</p> 
-                    Click <a href="#">here</a> to update your profile or go to your <a href="{% url "product:cart" %}">cart</a>.
-                    <p>
-                        <a href="{% url "user_profile:logout" %}" class="btn btn-secondary btn-block btn-lg">Logout</a>
-                    </p>
+                    Click <a href="{% url "user_profile:update" %}">here</a> to update your profile or go to your <a href="{% url "product:cart" %}">cart</a>.
+                    <p></p>
+                    <a href="{% url "user_profile:logout" %}" class="btn btn-secondary btn-block btn-lg">Logout</a>
         {% else %}
                     <form action="" method="post" class="form">
                         {% csrf_token %}

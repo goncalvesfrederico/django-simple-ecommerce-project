@@ -5,16 +5,23 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-5">
-                <h1>Register</h1>
-
-                <form action="" method="post" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form create_form %}
-                    {% bootstrap_form profile_form %}
-                    {% buttons %}
-                        <button class="btn btn-primary btn-block btn-lg">Register</button>
-                    {% endbuttons %}
-                </form>
+                {% if not user.is_authenticated %}
+                    <h1>Register</h1>
+                    
+                    <form action="" method="post" class="form">
+                        {% csrf_token %}
+                        {% bootstrap_form create_form %}
+                        {% bootstrap_form profile_form %}
+                        {% buttons %}
+                            <button class="btn btn-primary btn-block btn-lg">Register</button>
+                        {% endbuttons %}
+                    </form>
+                {% else %}
+                    <p>You are logged as {{ user }} ({{ user.first_name }} {{ user.last_name}}).</p> 
+                    Click <a href="{% url "user_profile:update" %}">here</a> to update your profile or go to your <a href="{% url "product:cart" %}">cart</a>.
+                    <p></p>
+                    <a href="{% url "user_profile:logout" %}" class="btn btn-secondary btn-block btn-lg">Logout</a>
+                {% endif %}
             </div>
         </div>
     </div>
