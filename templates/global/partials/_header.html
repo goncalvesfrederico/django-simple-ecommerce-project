@@ -146,35 +146,23 @@
             <li class="nav-item">
               <a class="nav-link me-4" href="#yearly-sale">Sale</a>
             </li>
+
+            {% if user.is_authenticated %}
             <li class="nav-item dropdown">
-              <a class="nav-link me-4 dropdown-toggle link-dark" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Pages</a>
-              <ul class="dropdown-menu">
+              <a class="nav-link me-4 dropdown-toggle link-dark show" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="true">Account</a>
+              <ul class="dropdown-menu show">
                 <li>
-                  <!-- TODO: update href -->
-                  <a href="#" class="dropdown-item">About</a>
+                  <a href="{% url "product:cart" %}" class="dropdown-item">Cart</a>
                 </li>
                 <li>
-                  <!-- TODO: update href -->
-                  <a href="#" class="dropdown-item">Blog</a>
+                  <a href="{% url "user_profile:update" %}" class="dropdown-item">Update Profile</a>
                 </li>
                 <li>
-                  <!-- TODO: update href -->
-                  <a href="#" class="dropdown-item">Shop</a>
-                </li>
-                <li>
-                  <!-- TODO: update href -->
-                  <a href="#" class="dropdown-item">Cart</a>
-                </li>
-                <li>
-                  <!-- TODO: update href -->
-                  <a href="#" class="dropdown-item">Checkout</a>
-                </li>
-                <li>
-                  <!-- TODO: update href -->
-                  <a href="#" class="dropdown-item">Contact</a>
+                  <a href="{% url "user_profile:login" %}" class="dropdown-item">Logout</a>
                 </li>
               </ul>
             </li>
+            {% endif %}
             <li class="nav-item">
               <div class="user-items ps-5">
                 <ul class="d-flex justify-content-end list-unstyled">

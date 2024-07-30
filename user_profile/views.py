@@ -1,3 +1,4 @@
+import copy
 from typing import Any
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -23,7 +24,7 @@ class CreateView(FormView):
         )
         return context
 
-    def post(self, request, *args: str, **kwargs) -> HttpResponse:
+    def post(self, request, *args, **kwargs) -> HttpResponse:
         create_form = CreateUserForm(self.request.POST)
         profile_form = ProfileForm(self.request.POST)
 
@@ -35,13 +36,15 @@ class CreateView(FormView):
             messages.success(self.request, "Your account has been created.")
             return self.form_valid(create_form, profile_form)
         else:
-            return self.form_valid(create_form, profile_form)
+            return self.form_invalid(create_form, profile_form)
 
     def form_valid(self, create_form, profile_form):
+        return super().form_valid(create_form)
+    
+    def form_invalid(self, create_form, profile_form):
         context = self.get_context_data()
         context["create_form"] = create_form
         context["profile_form"] = profile_form
-        print(context)
         return self.render_to_response(context)
 
 
@@ -66,9 +69,15 @@ class LogoutView(LoginRequiredMixin, View):
     login_url = "user_profile:login"
 
     def get(self, request):
-        print(self.request)
-        auth.logout(request)
-        return redirect("user_profile:login")
+        if not self.request.session.get("cart"):
+            cart_saved = copy.deepcopy(self.request.session.get("cart"))
+            auth.logout(self.request)
+            self.request.session["cart"] = cart_saved
+            self.request.session.save()
+            return redirect("user_profile:login")
+        else:
+            auth.logout(self.request)
+            return redirect("user_profile:login")
     
 
 class PerfilUpdateView(LoginRequiredMixin, FormView):
