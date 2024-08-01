@@ -68,22 +68,18 @@ class LoginView(FormView):
 class LogoutView(LoginRequiredMixin, View):
     login_url = "user_profile:login"
 
-    def get(self, request):
-        if not self.request.session.get("cart"):
-            cart_saved = copy.deepcopy(self.request.session.get("cart"))
-            auth.logout(self.request)
-            self.request.session["cart"] = cart_saved
-            self.request.session.save()
-            return redirect("user_profile:login")
-        else:
-            auth.logout(self.request)
-            return redirect("user_profile:login")
+    def get(self, *args, **kwargs):
+        cart_saved = copy.deepcopy(self.request.session.get("cart"))
+        auth.logout(self.request)
+        self.request.session["cart"] = cart_saved
+        self.request.session.save()
+        return redirect("user_profile:login")
     
 
 class PerfilUpdateView(LoginRequiredMixin, FormView):
     template_name = "user_profile/update_profile.html"
     form_class = UpdateUserForm
-    success_url = reverse_lazy("user_profile:update")
+    success_url = reverse_lazy("cart:cartdetail")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -105,20 +101,16 @@ class PerfilUpdateView(LoginRequiredMixin, FormView):
             profile.user = user
             profile.save()
             messages.success(self.request, "Your account has been updated.")
-            return self.form_valid(update_user_form, update_profile_form)
+            return self.form_valid(update_user_form)
         else:
             messages.error(self.request, "Verify the form!")
-            return self.form_invalid(update_user_form, update_profile_form)
+            return self.form_invalid(update_user_form)
     
-    def form_valid(self, update_user_form, update_profile_form):
-        context = self.get_context_data()
-        context["update_user_form"] = update_user_form
-        context["update_profile_form"] = update_profile_form
-        return self.render_to_response(context)
+    def form_valid(self, form):
+        return super().form_valid(form)
 
-    def form_invalid(self, update_user_form, update_profile_form):
+    def form_invalid(self, form):
         context = self.get_context_data()
-        context["update_user_form"] = update_user_form
-        context["update_profile_form"] = update_profile_form
+        context["update_user_form"] = form
+        context["update_profile_form"] = ProfileForm(instance=self.request.user.profile)
         return self.render_to_response(context)
-    
