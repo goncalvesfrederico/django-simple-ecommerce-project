@@ -14,7 +14,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Usuário"
     )
-    born = models.DateField(verbose_name="Data de Nascimento")
+    born = models.DateField(verbose_name="Data de Nascimento", blank=True, null=True)
     cpf = models.CharField(verbose_name="CPF", max_length=11)
     address = models.CharField(verbose_name="Endereço", max_length=50)
     number = models.CharField(verbose_name="Numero", max_length=5)

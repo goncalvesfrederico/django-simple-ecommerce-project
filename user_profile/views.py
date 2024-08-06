@@ -8,6 +8,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from user_profile.forms import CreateUserForm, ProfileForm, UpdateUserForm
+from user_profile.models import Profile
 
 class CreateView(FormView):
     template_name = "user_profile/create.html"
@@ -83,6 +84,10 @@ class PerfilUpdateView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        if not hasattr(self.request.user, "profile"):
+            Profile.objects.create(user=self.request.user, born=None)
+
         context.update(
             {
                 "update_user_form": UpdateUserForm(instance=self.request.user),
