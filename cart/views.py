@@ -33,8 +33,8 @@ class CartDetail(View):
         return render(self.request, self.template_name, context)
 
 
-class Buy(View):
-    template_name = "cart/buy.html"
+class SaveOrder(View):
+    template_name = "cart/saveorder.html"
 
     def get(self, *args, **kwargs):
         user = self.request.user
@@ -100,6 +100,8 @@ class Buy(View):
         return redirect("cart:saveorder")
 
 
-class SaveOrder(View):
+class Buy(View):
+    template_name = "cart/buy.html"
+
     def get(self, *args, **kwargs):
-        return HttpResponse("List")
+        return HttpResponse("Buy")
