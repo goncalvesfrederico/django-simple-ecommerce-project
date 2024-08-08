@@ -12,6 +12,7 @@ class Order(models.Model):
         verbose_name="Usuário"
     )
     total = models.FloatField()
+    total_qty = models.PositiveIntegerField(verbose_name="Quantidade Total")
     status = models.CharField(
         max_length=1,
         default="C",
