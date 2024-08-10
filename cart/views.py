@@ -1,6 +1,10 @@
+from typing import Any
+from django.db.models.query import QuerySet
+from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from django.views.generic import View
+from django.views.generic import View, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from user_profile.models import Profile
 from product.models import Variation
 from cart.models import Order, OrderItems
@@ -95,13 +99,24 @@ class SaveOrder(View):
                 ) for v in cart.values()
             ]
         )
-        
+
         del self.request.session["cart"]
-        return redirect("cart:saveorder")
+        return redirect(
+            reverse(
+                "cart:buy",
+                kwargs={"pk": save_order.pk},
+            )
+        )
 
 
-class Buy(View):
+class Buy(LoginRequiredMixin, DetailView):
+    login_url = "user_profile:login"
     template_name = "cart/buy.html"
+    model = Order
+    pk_url_kwarg = "pk"
+    context_object_name = "order"
 
-    def get(self, *args, **kwargs):
-        return HttpResponse("Buy")
+    def get_queryset(self) -> QuerySet[Any]:
+        qs = super().get_queryset()
+        qs = qs.filter(user=self.request.user)
+        return qs
