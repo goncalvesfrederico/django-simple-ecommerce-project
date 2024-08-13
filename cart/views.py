@@ -1,9 +1,10 @@
 from typing import Any
 from django.db.models.query import QuerySet
+from django.http import HttpRequest
 from django.urls import reverse
 from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse
-from django.views.generic import View, DetailView
+from django.views.generic import View, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from user_profile.models import Profile
 from product.models import Variation
@@ -117,6 +118,27 @@ class Buy(LoginRequiredMixin, DetailView):
     context_object_name = "order"
 
     def get_queryset(self) -> QuerySet[Any]:
-        qs = super().get_queryset()
-        qs = qs.filter(user=self.request.user)
-        return qs
+        return super().get_queryset().filter(user=self.request.user)
+    
+
+class Orders(LoginRequiredMixin, ListView):
+    login_url = "user_profile:login"
+    template_name = "cart/orders.html"
+    model = Order
+    context_object_name = "orders"
+    paginate_by = 10
+    ordering = ["-id"]
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(user=self.request.user)
+
+
+class OrderDetail(LoginRequiredMixin, DetailView):
+    login_url = "user_profile:login"
+    template_name = "cart/order-detail.html"
+    model = Order
+    context_object_name = "order"
+    pk_url_kwarg = "pk"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return super().get_queryset().filter(user=self.request.user)

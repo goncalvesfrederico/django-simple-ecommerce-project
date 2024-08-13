@@ -16,7 +16,7 @@ class OrderItemsInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = "pk", "total", "status"
+    list_display = "pk", "formatted_total_price", "status"
     list_display_links = "pk",
     search_fields = "pk", "total", "status",
     list_per_page = 10

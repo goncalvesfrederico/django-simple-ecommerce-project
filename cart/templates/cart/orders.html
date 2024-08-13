@@ -1,0 +1,40 @@
+{% extends "global/base.html" %}
+{% load custom_tags %}
+
+{% block content %}
+<main class="container mt-4 mb-4">
+    <div class="row mt-3">
+        <div class="col">
+            <h3>Your Orders</h3>
+            <p class="lead">Products, quantitys and subtotal below.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tr>
+                        <th scope="col">Order</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Items Quantity</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Details</th>
+                    </tr>
+                    
+                    {% for order in orders %}
+                        <tr>
+                            <th scope="row">{{ order }}</th>
+                            <td>{{ order.total|priceformatted }}</td>
+                            <td>{{ order.total_qty }}</td>
+                            <td>{{ order.get_status_display }}</td>
+                            <td>
+                                <a href="{% url "cart:orderdetail" order.id %}" class="clr-dark ml-3 no-underline" target="_blank">
+                                    <i class="fas fa-times-circle" aria-hidden="true">See</i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include "global/partials/_pagination.html" %}
+</main>
+{% endblock content %}

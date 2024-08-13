@@ -1,0 +1,65 @@
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+    <main class="container mt-4 mb-4">
+        <div class="row mt-3">
+            <h1>Order Detail</h1>
+            <div class="row">
+                <p class="lead">This functionality has not been implemented in this project.</p>
+                <div class="col-lg-5">
+                    <h4>{{ order }}</h4>
+                </div>
+                <dl class="row">
+                    <dt class="col-lg-2">Number Order:</dt>
+                    <dd class="col-lg-4">{{ order.id }}</dd>
+                    <dt class="col-lg-2">Total:</dt>
+                    <dd class="col-lg-4">{{ order.total|priceformatted }}</dd>
+
+                    <dt class="col-lg-2">Items Quantity:</dt>
+                    <dd class="col-lg-4">{{ order.total_qty }}</dd>
+                    <dt class="col-lg-2">Status:</dt>
+                    <dd class="col-lg-4">{{ order.get_status_display }}</dd>
+                </dl>
+            </div>
+        </div>
+    </main>
+    <main class="container mt-4 mb-4">
+        <div class="row mt-3">
+            <div class="col">
+                <h3>Shopping Cart</h3>
+                <p class="lead">Products, quantitys and subtotal below.</p>
+    
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th class="d-none d-lg-block">Image</th>
+                            <th>Product</th>
+                            <th>V.</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                        </tr>
+                        
+                        {% for row in order.orderitems_set.all %}
+                            <tr>
+                                <td class="d-none d-lg-block">
+                                    <img src="{% get_media_prefix %}{{ row.image }}" alt="{{ row.product}} {{row.variation }}" class="cart-img">
+                                </td>
+                                <td>{{ row.product }} |</td>
+                                <td>{{ row.variation }}</td>
+                                <td>{{ row.quantity }}</td>
+                                {% if row.promotional_price < row.price %}
+                                    <td>{{ row.promotional_price|priceformatted }} </td>
+                                {% else %}
+                                    <td>{{ row.price|priceformatted }} </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+    
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock content %}

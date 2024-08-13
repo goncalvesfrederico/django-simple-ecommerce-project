@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from utils.format_price import formatprice
 
 class Order(models.Model):
     class Meta:
@@ -25,6 +26,11 @@ class Order(models.Model):
             ("F", "Finalizado"),
         )
     )
+
+    def formatted_total_price(self):
+        return formatprice(self.total)
+    
+    formatted_total_price.short_description = "Total"
 
     def __str__(self) -> str:
         return f"Pedido N. {self.pk}"
