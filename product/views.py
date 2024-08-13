@@ -17,6 +17,11 @@ class ProductDetailView(DetailView):
     template_name = "product/product.html"
     context_object_name = 'product'
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"{self.object.name} - "
+        return context
+
 
 class AddToCart(View):
     def get(self, *args, **kwargs):
@@ -117,9 +122,6 @@ class CartListView(View):
             "product/cart.html", 
             {
                 "cart": context,
+                "page_title": "Cart - "
             }
         )
-
-
-class CheckoutView(View):
-    ...

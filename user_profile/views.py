@@ -21,6 +21,7 @@ class CreateView(FormView):
             {
                 "create_form": context.pop("form"),
                 "profile_form": ProfileForm(),
+                "page_title": "Creating User - "
             }
         )
         return context
@@ -57,6 +58,7 @@ class LoginView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["login_form"] = context.pop("form")
+        context["page_title"] = "Login - "
         return context
 
     def form_valid(self, form):
@@ -92,6 +94,7 @@ class PerfilUpdateView(LoginRequiredMixin, FormView):
             {
                 "update_user_form": UpdateUserForm(instance=self.request.user),
                 "update_profile_form": ProfileForm(instance=self.request.user.profile),
+                "page_title": f"Updating {self.request.user} - "
             }
         )
         return context

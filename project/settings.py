@@ -44,9 +44,6 @@ INSTALLED_APPS = [
     'product',
     'cart',
     'user_profile',
-    
-    # TODO: remove debug toobar when i finished the project.
-    'debug_toolbar',
     'bootstrap5',
 ]
 
@@ -61,9 +58,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    # TODO: remove debug toobar when i finished the project.
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -150,8 +144,3 @@ MEDIA_ROOT = DATA_DIR / 'media'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# TODO: remove debug toobar when i finished the project.
-INTERNAL_IPS = [
-    "127.0.0.1",
-]

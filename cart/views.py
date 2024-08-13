@@ -34,6 +34,7 @@ class CartDetail(View):
         context = {
             "user": user,
             "cart": cart,
+            "page_title": "Cart Detail - "
         }
         return render(self.request, self.template_name, context)
 
@@ -126,11 +127,16 @@ class Orders(LoginRequiredMixin, ListView):
     template_name = "cart/orders.html"
     model = Order
     context_object_name = "orders"
-    paginate_by = 10
+    paginate_by = 2
     ordering = ["-id"]
 
     def get_queryset(self) -> QuerySet[Any]:
         return super().get_queryset().filter(user=self.request.user)
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Your orders - "
+        return context
 
 
 class OrderDetail(LoginRequiredMixin, DetailView):
@@ -142,3 +148,8 @@ class OrderDetail(LoginRequiredMixin, DetailView):
 
     def get_queryset(self) -> QuerySet[Any]:
         return super().get_queryset().filter(user=self.request.user)
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = f"{self.object} - "
+        return context
