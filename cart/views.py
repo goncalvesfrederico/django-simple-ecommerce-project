@@ -127,7 +127,7 @@ class Orders(LoginRequiredMixin, ListView):
     template_name = "cart/orders.html"
     model = Order
     context_object_name = "orders"
-    paginate_by = 2
+    paginate_by = 5
     ordering = ["-id"]
 
     def get_queryset(self) -> QuerySet[Any]:
