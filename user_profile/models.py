@@ -59,6 +59,15 @@ class Profile(models.Model):
 
     def clean(self) -> None:
         error_messages = {}
+        cpf_sent = self.cpf or None
+        cpf_saved = None
+        get_cpf_profile = Profile.objects.filter(cpf=cpf_sent).first()
+
+        if get_cpf_profile:
+            cpf_saved = get_cpf_profile.cpf
+            
+            if cpf_saved is not None and self.pk != get_cpf_profile.pk:
+                error_messages["cpf"] = "CPF already exists in Database"
 
         if not check(self.cpf):
             error_messages["cpf"] = "Digite um CPF válido"
