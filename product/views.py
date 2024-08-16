@@ -1,4 +1,5 @@
 from typing import Any
+from django.db.models.query import QuerySet, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import HttpRequest, HttpResponse
@@ -84,7 +85,6 @@ class AddToCart(View):
                 "product_image": product_image,
             }
 
-        # print(cart)
         self.request.session.save()
 
         messages.success(self.request, f"The {product_name} {variation_name} product has been added to your cart {cart[variation_id]["quantity"]}x.")
@@ -125,3 +125,36 @@ class CartListView(View):
                 "page_title": "Cart - "
             }
         )
+    
+
+class SearchProduct(ProductListView):
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+        self._search_value = ""
+
+    def setup(self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
+        self._search_value = request.GET.get("search", "").strip()
+        return super().setup(request, *args, **kwargs)
+    
+    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        if self._search_value == "":
+            return redirect("/")
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self) -> QuerySet[Any]:
+        qs = super().get_queryset().filter(
+            Q(name__icontains=self._search_value) |
+            Q(short_description__icontains=self._search_value) |
+            Q(long_description__icontains=self._search_value)
+        )
+        return qs
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "search_value": self._search_value,
+                "page_title": f"{self._search_value} - ",
+            }
+        )
+        return context

@@ -72,8 +72,8 @@
 
 <div class="search-popup">
   <div class="search-popup-container">
-    <form action="" class="search-form" role="search" method="get">
-      <input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value="" name="s" />
+    <form action="{% url "product:search" %}" class="search-form" role="search" method="get">
+      <input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value="{{ search_value }}" name="search" />
       <button class="search-submit" type="submit">
         <svg class="search">
           <use href="#search"></use>
